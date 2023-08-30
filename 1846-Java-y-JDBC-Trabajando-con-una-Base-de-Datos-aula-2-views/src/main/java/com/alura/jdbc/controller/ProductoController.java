@@ -21,14 +21,15 @@ public class ProductoController {
 		Connection con = new ConnectionFactory().recuperaConexion();
 		
 		 PreparedStatement statement = con.prepareStatement("UPDATE PRODUCTO SET "
-					+ " NOMBRE = ?"
-					+ ", DESCRIPCION = ?"
-					+ ", CANTIDAD = ?"
+					+ " NOMBRE = ?, "
+					+ " DESCRIPCION = ?, "
+					+ " CANTIDAD = ?"
 					+ " WHERE ID = ?");
 		 
 		 statement.setString(1, nombre);
 		 statement.setString(2, descripcion);
-		 statement.set
+		 statement.setInt(3, cantidad);
+		 statement.setInt(4, id);
 		
 		
 		statement.execute();
@@ -48,7 +49,11 @@ public class ProductoController {
 		statement.setInt(1, id);
 		statement.execute();
 		
-		return statement.getUpdateCount();
+		int updateCount = statement.getUpdateCount();
+		
+		con.close();
+		
+		return updateCount;
 	}
 
 	public List<Map<String, String>> listar() throws SQLException {
