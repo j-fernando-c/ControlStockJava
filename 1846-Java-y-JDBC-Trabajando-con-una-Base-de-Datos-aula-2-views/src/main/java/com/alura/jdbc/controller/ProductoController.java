@@ -2,6 +2,7 @@ package com.alura.jdbc.controller;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,15 +19,19 @@ public class ProductoController {
 		
 		ConnectionFactory factory = new ConnectionFactory();
 		Connection con = new ConnectionFactory().recuperaConexion();
-		 Statement statement = con.createStatement();
 		
-	
+		 PreparedStatement statement = con.prepareStatement("UPDATE PRODUCTO SET "
+					+ " NOMBRE = ?"
+					+ ", DESCRIPCION = ?"
+					+ ", CANTIDAD = ?"
+					+ " WHERE ID = ?");
+		 
+		 statement.setString(1, nombre);
+		 statement.setString(2, descripcion);
+		 statement.set
 		
-		statement.execute("UPDATE PRODUCTO SET "
-				+ " NOMBRE = '" + nombre + "'"
-				+ ", DESCRIPCION = '" + descripcion + "'"
-				+ ", CANTIDAD = " + cantidad
-				+ " WHERE ID = " + id);
+		
+		statement.execute();
 		
 		int updateCount = statement.getUpdateCount();
 
@@ -38,9 +43,10 @@ public class ProductoController {
 	public int eliminar(Integer id) throws SQLException {
 		Connection con = new ConnectionFactory().recuperaConexion();
 		
-		Statement statement = con.createStatement();
+		PreparedStatement statement = con.prepareStatement("DELETE FROM PRODUCTO WHERE ID = ?");
 		
-		statement.execute("DELETE FROM PRODUCTO WHERE ID = "+  id);
+		statement.setInt(1, id);
+		statement.execute();
 		
 		return statement.getUpdateCount();
 	}
@@ -49,9 +55,9 @@ public class ProductoController {
 		
 		Connection con = new ConnectionFactory().recuperaConexion();  //importa un metodo de una clase que tiene la ruta de conexion
 		
-		Statement statement = con.createStatement();
+		PreparedStatement statement = con.prepareStatement("SELECT ID, NOMBRE, DESCRIPCION, CANTIDAD FROM PRODUCTO");
 		
-		boolean result = statement.execute("SELECT ID, NOMBRE, DESCRIPCION, CANTIDAD FROM PRODUCTO");
+		boolean result = statement.execute();
 		
 		ResultSet resultSet = statement.getResultSet();
 		
@@ -76,14 +82,21 @@ public class ProductoController {
 	}
 
     public void guardar(Map<String, String> producto) throws SQLException {
-		Connection con = new ConnectionFactory().recuperaConexion();
+    	ConnectionFactory factory = new ConnectionFactory();
+		Connection con = factory.recuperaConexion();
 		
-		Statement statement= con.createStatement();
+		//preparedStatemnt es del paquete java.sql y sirve para evitar ataques de sqlInyection
+		PreparedStatement statement= con.prepareStatement("INSERT INTO PRODUCTO"
+				+ "(nombre, descripcion, cantidad)"
+				 + "VALUES (?,?,?)",
+				 Statement.RETURN_GENERATED_KEYS);        //wtf
 		
-		statement.execute("INSERT INTO PRODUCTO(nombre, descripcion, cantidad)"
-				 + "VALUES ('" + producto.get("NOMBRE") + "' ,'"
-				 + producto.get("DESCRIPCION") + "',"
-				 + producto.get("CANTIDAD") + ")", Statement.RETURN_GENERATED_KEYS);
+		statement.setString(1, producto.get("NOMBRE"));
+		statement.setString(2, producto.get("DESCRIPCION"));
+		statement.setInt(3, Integer.valueOf(producto.get("CANTIDAD")));
+		
+
+		statement.execute();
 		
 		ResultSet resultSet = statement.getGeneratedKeys();
 		
