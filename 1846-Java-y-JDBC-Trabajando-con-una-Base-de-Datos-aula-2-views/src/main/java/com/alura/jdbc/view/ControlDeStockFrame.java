@@ -247,9 +247,9 @@ public class ControlDeStockFrame extends JFrame {
                             cantidadInt);
         
         // TODO
-        var categoria = comboCategoria.getSelectedItem();
+        var categoria = (Categoria)comboCategoria.getSelectedItem();                          //logica para asignar la categoria a un producto
 
-        this.productoController.guardar(producto);
+        this.productoController.guardar(producto, categoria.getId());
 
         JOptionPane.showMessageDialog(this, "Registrado con éxito!");
 
