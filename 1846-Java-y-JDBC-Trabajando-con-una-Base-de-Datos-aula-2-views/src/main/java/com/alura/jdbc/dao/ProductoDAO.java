@@ -122,4 +122,36 @@ public class ProductoDAO {
 	        }
 	    }
 
+		public List<Producto> listar(Integer categoriaId) {
+			  List<Producto> resultado = new ArrayList<>();
+
+		        try {                                                                                            //cual es el alcance de final
+		            final PreparedStatement statement = con                                                     // importa un metodo de una clase que tiene la ruta de conexion
+		                    .prepareStatement("SELECT ID, NOMBRE, DESCRIPCION, CANTIDAD "
+		                    		+ " FROM PRODUCTO "
+		                    		+ " WHERE CATEGORIA_ID = ?");
+		    
+		            try (statement) {
+		            	statement.setInt(1, categoriaId);
+		                statement.execute();
+		    
+		                final ResultSet resultSet = statement.getResultSet();
+		    
+		                try (resultSet) {
+		                    while (resultSet.next()) {
+		                        resultado.add(new Producto(
+		                                resultSet.getInt("ID"),
+		                                resultSet.getString("NOMBRE"),
+		                                resultSet.getString("DESCRIPCION"),
+		                                resultSet.getInt("CANTIDAD")));
+		                    }
+		                }
+		            }
+		        } catch (SQLException e) {
+		            throw new RuntimeException(e);
+		        }
+
+		        return resultado;
+		}
+
 	}

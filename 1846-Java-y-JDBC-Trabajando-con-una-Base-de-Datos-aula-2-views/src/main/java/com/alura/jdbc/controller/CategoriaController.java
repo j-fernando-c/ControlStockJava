@@ -22,9 +22,11 @@ public class CategoriaController {
 		return categoriaDAO.listar();
 	}
 
-    public List<?> cargaReporte() {
+    public List<Categoria> cargaReporte() {
        
-        return new ArrayList<>();
+        return this.categoriaDAO.listarConProductos();
     }
+    
+    
 
 }

@@ -27,7 +27,7 @@ public class ControlDeStockFrame extends JFrame {
     private JLabel labelNombre, labelDescripcion, labelCantidad, labelCategoria;
     private JTextField textoNombre, textoDescripcion, textoCantidad;
     private JComboBox<Categoria> comboCategoria;            //libreria para el dropdown y migracion de datos 
-    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonReporte;
+    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonReporte;  //listado de botones del front
     private JTable tabla;
     private DefaultTableModel modelo;
     private ProductoController productoController;
